@@ -1,7 +1,7 @@
-from pynput.keyboard import Listener
+
 import time
 import os
-keyboard_locked = True
+
 def KilometertoMiles(km):
     return km * 0.621371
 def MilestoKilometer(m):
@@ -14,19 +14,7 @@ def KilogramstoPounds(kg):
     return kg * 2.20462
 def PoundstoKilograms(lb):
     return lb * 0.453592
-def lock_keyboard():
-    global keyboard_locked
-    keyboard_locked = True
-def unlock_keyboard():
-    global keyboard_locked
-    keyboard_locked = False
-def on_press():
-    global keyboard_locked
-    if keyboard_locked:
-        return False
-def start_keyboard_listener():
-    with Listener(on_press=on_press) as listener:
-        listener.join()
+
 
 def unitconverter():
     global keyboard_locked
@@ -47,8 +35,7 @@ def unitconverter():
     time.sleep(1)
     print("Press 6 for Pounds to Kilograms")
     
-    unlock_keyboard()
-    
+
     choice = int(input("Enter the number of your choice..."))
     time.sleep(1)
     lock_keyboard
@@ -87,7 +74,5 @@ def unitconverter():
         os.system("clear")
         unitconverter()
         import threading
-        listener_thread = threading.Thread(target=start_keyboard_listener, daemon=True)
-        listener_thread.start()
-
+     
 unitconverter()
