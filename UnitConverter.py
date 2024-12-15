@@ -1,6 +1,8 @@
 
 import time
 import os
+import sys
+import termios
 
 def KilometertoMiles(km):
     return km * 0.621371
@@ -14,11 +16,12 @@ def KilogramstoPounds(kg):
     return kg * 2.20462
 def PoundstoKilograms(lb):
     return lb * 0.453592
+def flush_input():
+    termios.tcflush(sys.stdin, termios.TCIFLUSH)
 
 
 def unitconverter():
-    global keyboard_locked
-    lock_keyboard()
+
     os.system("clear")
     print("Welcome to unit converter")
     time.sleep(0.5)
@@ -35,10 +38,11 @@ def unitconverter():
     time.sleep(1)
     print("Press 6 for Pounds to Kilograms")
     
-
+    
+    flush_input()
     choice = int(input("Enter the number of your choice..."))
     time.sleep(1)
-    lock_keyboard
+  
     os.system("clear")     
     if choice == 1:
         km = float(input("Distance in Kilometers?..."))
@@ -73,6 +77,6 @@ def unitconverter():
         time.sleep(0.8)
         os.system("clear")
         unitconverter()
-        import threading
+        
      
 unitconverter()
