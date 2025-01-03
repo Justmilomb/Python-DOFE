@@ -2,7 +2,7 @@ import os
 import time
 tasks = []
 def clear_terminal():
-    if os.__name__ == "nt":
+    if os.name == "nt":
         os.system("cls")
     else:
         os.system("clear")
