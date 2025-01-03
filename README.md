@@ -1,7 +1,7 @@
 # [DOFE](https://www.dofe.org/) Python Project
 
-> All scripts are made using [Ubuntu](https://ubuntu.com/)
+> All scripts are made on [Ubuntu](https://ubuntu.com/)
 
 
-Just doing some coding/programing for Bronze DOFE for 6 months so thought i could 
-add all my scripts to here.
+I have just been doing some coding/programming for Bronze DOFE for 6 months so I thought I could 
+add all my scripts here.
