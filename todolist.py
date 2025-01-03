@@ -1,6 +1,8 @@
 import os
 import time
+
 tasks = []
+
 def clear_terminal():
     if os.name == "nt":
         os.system("cls")
@@ -32,37 +34,49 @@ def view_tasks():
     if len(tasks) == 0:
         print("No tasks logged...")
         time.sleep(1)
-        
     else:
-        print("Here are you logged tasks")
+        print("Here are your logged tasks:")
         for i, task in enumerate(tasks, start=1):
             print(f"{i}. {task}")
-            while True:
-                goback = input("Go back to menu? Y/N  ")
-                if goback == "N" or goback == "n":
-                    clear_terminal()
-                    print(f"{i}. {task}")
-                elif goback == "Y" or goback == "y":
-                    print("Going back to menu")
-                    time.sleep(0.5)
-                    
-                    break   
-                else:
-                    print("Invalid input choose Y/N")
-                    clear_terminal
-
+    
+    while True:
+        goback = input("Go back to menu? Y/N  ")
+        if goback in ["N", "n"]:
+            clear_terminal()
+            print("Here are your logged tasks:")
+            for i, task in enumerate(tasks, start=1):
+                print(f"{i}. {task}")
+        elif goback in ["Y", "y"]:
+            print("Going back to menu")
+            time.sleep(0.5)
+            break
+        else:
+            print("Invalid input, choose Y/N")
+            time.sleep(1)
 
 def delete_log():
-    view_tasks()
-    task_num = int(input("Enter the task number to delete:  "))
-    if 1 <= task_num <= len(tasks):
-        removed = tasks.pop(task_num - 1)
-        print(f"'{removed}' has been deleted")
-    else:
-        print("Invalid input try again")
-        delete_log()
+    if len(tasks) == 0:
+        print("No tasks logged...")
+        time.sleep(1)
+        return  # Return to the menu instead of calling display_menu()
+    
+    print("Here are your logged tasks:")
+    for i, task in enumerate(tasks, start=1):
+        print(f"{i}. {task}")
 
-        
+    while True:
+        try:
+            task_num = int(input("Enter the task number to delete:  "))
+            if 1 <= task_num <= len(tasks):
+                removed = tasks.pop(task_num - 1)
+                print(f"'{removed}' has been deleted")
+                break
+            else:
+                print("Invalid input, try again")
+                clear_terminal()
+        except ValueError:
+            print("Please enter a valid number.")
+            clear_terminal()
 
 def choose_task():
     chosen = input("Enter a number between 1-4:  ")
@@ -77,32 +91,28 @@ def choose_task():
         delete_log()
     elif chosen == "4":
         clear_terminal()
-        print("Are you sure you want to leave nothing will be saved?")
+        print("Are you sure you want to leave? Nothing will be saved.")
         time.sleep(0.25)
         while True:
             yn = input("Do you want to close the program Y/N  ")
-            if yn == "Y" or yn == "y":
+            if yn in ["Y", "y"]:
                 print("Goodbye!")
                 time.sleep(0.5)
                 exit()
-            elif yn == "N" or yn == "n":
+            elif yn in ["N", "n"]:
                 print("Going back to menu")
                 time.sleep(0.5)
-                
-                break   
+                break
             else:
-                print("Invalid input choose Y/N")
-                clear_terminal
-        
-
+                print("Invalid input, choose Y/N")
+                time.sleep(1)
+                clear_terminal()
     else:
-        print("Invalid input choose 1-4")
+        print("Invalid input, choose 1-4")
         time.sleep(1)
-        choose_task()
-
-
+        clear_terminal()
+        
 
 while True:
     display_menu()
     choose_task()
-
