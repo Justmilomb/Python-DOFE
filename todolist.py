@@ -2,6 +2,21 @@ import os
 import time
 
 tasks = []
+def load_tasks():
+    if not os.path.exists("tasks.txt"):
+        open("tasks.txt", "w").close()
+        return
+    with open("tasks.txt", "r") as file:
+        for line in file:
+            tasks.append(line.strip())
+            return
+
+def save_tasks():
+    with open("tasks.txt", "w") as file:
+        for task in tasks:
+            file.write(task + "\n")
+    
+
 
 def clear_terminal():
     if os.name == "nt":
@@ -26,6 +41,7 @@ def display_menu():
 def log_task():
     task = input("Enter the name of your task:  ")
     tasks.append(task)
+    save_tasks()
     time.sleep(0.25)
     print(f"'{task}' has been logged")
     time.sleep(1)
@@ -69,6 +85,7 @@ def delete_log():
             task_num = int(input("Enter the task number to delete:  "))
             if 1 <= task_num <= len(tasks):
                 removed = tasks.pop(task_num - 1)
+                save_tasks()
                 print(f"'{removed}' has been deleted")
                 break
             else:
@@ -91,13 +108,14 @@ def choose_task():
         delete_log()
     elif chosen == "4":
         clear_terminal()
-        print("Are you sure you want to leave? Nothing will be saved.")
+        print("Are you sure you want to leave?  ")
         time.sleep(0.25)
         while True:
             yn = input("Do you want to close the program Y/N  ")
             if yn in ["Y", "y"]:
                 print("Goodbye!")
                 time.sleep(0.5)
+                save_tasks()
                 exit()
             elif yn in ["N", "n"]:
                 print("Going back to menu")
@@ -114,5 +132,6 @@ def choose_task():
         
 
 while True:
+    load_tasks()
     display_menu()
     choose_task()
