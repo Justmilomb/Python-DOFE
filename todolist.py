@@ -74,7 +74,7 @@ def delete_log():
     if len(tasks) == 0:
         print("No tasks logged...")
         time.sleep(1)
-        return  # Return to the menu instead of calling display_menu()
+        return  
     
     print("Here are your logged tasks:")
     for i, task in enumerate(tasks, start=1):
@@ -87,6 +87,7 @@ def delete_log():
                 removed = tasks.pop(task_num - 1)
                 save_tasks()
                 print(f"'{removed}' has been deleted")
+                load_tasks()
                 break
             else:
                 print("Invalid input, try again")
@@ -130,8 +131,7 @@ def choose_task():
         time.sleep(1)
         clear_terminal()
         
-
+load_tasks()
 while True:
-    load_tasks()
     display_menu()
     choose_task()
