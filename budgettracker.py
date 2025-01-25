@@ -1,34 +1,72 @@
 import os
 import time 
-expenses = []
-
-def loadexpenses():
-    if not os.path.exists("expenses.txt"):
-        open("expenses.txt", "w").close()
-        return
-    with open("expenses.txt", "r") as file:
-        for line in file:
-            expenses.append(line.strip())
-            return
-
-def saveexpenses():
-    with open("expenses.txt", "w") as file:
-        for amount in expenses:
-            file.write(amount + "\n")
+incomelist = []
+expenselist = []
 
 def clearterminal():
-    if os.name =="nt":
+    if os.name == "nt":
         os.system("cls")
     else:
         os.system("clear")
 
-def addtransaction():
-    name = input("What do you want to list this as...\n")
-    category = input("Enter the category of your expenses... \n")
-    amount = float(input("Enter your amount\nPS. Use negative numbers for expenditures"))
-    expenses.append({'name': name,'category': category, 'amount': amount })
-    print(f"Expense: {name}\nCategory: {category}\nAmount: :{amount} ")
+def mainmenu():
+    clearterminal()
+    print("Welcome to you're Budget-Tracker\nLets get started...")
+    time.sleep(1.5)
+    print("Choose 1 to add an income")
+    time.sleep(0.5)
+    print("Choose 2 to add an expense")
+    time.sleep(0.5)
+    print("Choose 3 to view you're balance")
+    time.sleep(0.5)
+    print("Choose 4 to exit the program")    
+    time.sleep(0.5)
+    chosen = input("What number do you choose?\n")
+    if chosen == "1":
+        income()
+    elif chosen == "2":
+        expense()
+    elif chosen == "3":
+        balance()
+    elif chosen == "4":
+        exit()
+    else: 
+        clearterminal()
+        print("INVALID")
+        time.sleep(0.5)
+        print("Choose a number between 1-4")
+        time.sleep(1)
+        mainmenu()
 
-loadexpenses()
-addtransaction()
+def income():
+    clearterminal()
+    try:
+        amount = float(input("Enter income amount\n"))
+    except ValueError:
+        print("Please enter a numerical number")
+        time.sleep(1)
+        income()
+    category = input("What category would this be under?\n")
+    incomelist.append({"Amount": amount,"Category": category})
+    print(f"£{amount} has been saved under the category {category}")
+    mainmenu()
+
+def expense():
+    clearterminal()
+    try:
+        amount = float(input("Enter expense amount\n"))
+    except ValueError:
+        print("Please enter a numerical number")
+        time.sleep(1)
+        expense()
+    category = input("What category would this be under?\n")
+    expenselist.append({"Amount": amount,"Category": category})
+    print(f"£{amount} has been saved under the category {category}")
+    mainmenu()
+
+def balance():
     
+
+
+
+mainmenu()
