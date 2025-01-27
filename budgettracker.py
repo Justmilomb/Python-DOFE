@@ -65,8 +65,29 @@ def expense():
     mainmenu()
 
 def balance():
+    clearterminal()
+    totalincome = sum(item["Amount"] for item in incomelist)
+    totalexpense = sum(item["Amount"] for item in expenselist)
+    balance = totalincome - totalexpense
+    print("-----Financial Summary------")
+    print(f"Total Income: £{totalincome:}")
+    print(f"Total Expenses: £{totalexpense}")
+    if balance >= 0:
+        print(f"Overall Balance: £{balance}")
+        print("Well done your saving money!")
+        return
+       
+    else:
+        print(f"Overall Balance: £{balance}")
+        print("Your in debt. You need to start saving!")
+        return
+    
+        
+
+    
+    
     
 
 
-
-mainmenu()
+while True:
+    mainmenu()
