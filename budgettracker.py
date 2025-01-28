@@ -1,5 +1,6 @@
 import os
 import time 
+import sys
 incomelist = []
 expenselist = []
 
@@ -40,29 +41,31 @@ def mainmenu():
 
 def income():
     clearterminal()
-    try:
-        amount = float(input("Enter income amount\n"))
-    except ValueError:
-        print("Please enter a numerical number")
-        time.sleep(1)
-        income()
-    category = input("What category would this be under?\n")
-    incomelist.append({"Amount": amount,"Category": category})
-    print(f"£{amount} has been saved under the category {category}")
-    mainmenu()
+    while True:
+        try:
+            amount = float(input("Enter income amount\n"))
+        except ValueError:
+            print("Please enter a numerical number")
+            time.sleep(1)
+            income()
+        category = input("What category would this be under?\n")
+        incomelist.append({"Amount": amount,"Category": category})
+        print(f"£{amount} has been saved under the category {category}")
+        mainmenu()
 
 def expense():
     clearterminal()
-    try:
-        amount = float(input("Enter expense amount\n"))
-    except ValueError:
-        print("Please enter a numerical number")
-        time.sleep(1)
-        expense()
-    category = input("What category would this be under?\n")
-    expenselist.append({"Amount": amount,"Category": category})
-    print(f"£{amount} has been saved under the category {category}")
-    mainmenu()
+    while True:
+        try:
+            amount = float(input("Enter expense amount\n"))     
+        except ValueError:
+            print("Please enter a numerical number")
+            time.sleep(1)
+            expense()
+        category = input("What category would this be under?\n")
+        expenselist.append({"Amount": amount,"Category": category})
+        print(f"£{amount} has been saved under the category {category}")
+        mainmenu()
 
 def balance():
     clearterminal()
@@ -75,19 +78,48 @@ def balance():
     if balance >= 0:
         print(f"Overall Balance: £{balance}")
         print("Well done your saving money!")
-        return
-       
-    else:
-        print(f"Overall Balance: £{balance}")
-        print("Your in debt. You need to start saving!")
-        return
+        time.sleep(1)
+        exit = input("Ready to go back?\n'Y' or 'n'\n")
+        if exit == "y".strip().lower():
+            mainmenu()
+        elif exit == "n".strip().lower():
+            balance()
+        else:
+            print("INVALID Input")
+            balance()
     
         
 
-    
-    
+    else:
+        print(f"Overall Balance: £{balance}")
+        print("Your in debt. You need to start saving!")
+        time.sleep(1)
+        exit = input("Ready to go back?\n'Y' or 'n'\n")
+        if exit == "y".strip().lower():
+            mainmenu()
+        elif exit == "n".strip().lower():
+            balance()
+        else:
+            print("INVALID Input")
+        
     
 
+def exit():
+    clearterminal()
+    while True:
+    
+        exit = input("Are you sure you want to leave?\n 'Y' or 'N'\n")
+        if exit == "y".strip().lower():
+            break
+        elif exit == "n".strip().lower():
+            print("Going back to menu...")
+            time.sleep(1)
+            mainmenu()
+        else:
+            clearterminal()
+            print("INVALID Input")
+            time.sleep(1)
+            clearterminal()
 
-while True:
-    mainmenu()
+    
+mainmenu()
