@@ -1,6 +1,5 @@
 import os
 import time 
-import sys
 incomelist = []
 expenselist = []
 
@@ -13,7 +12,7 @@ def clearterminal():
 def mainmenu():
     clearterminal()
     print("Welcome to you're Budget-Tracker\nLets get started...")
-    time.sleep(1.5)
+    time.sleep(0.5)
     print("Choose 1 to add an income")
     time.sleep(0.5)
     print("Choose 2 to add an expense")
@@ -87,14 +86,12 @@ def balance():
         else:
             print("INVALID Input")
             balance()
-    
         
-
     else:
         print(f"Overall Balance: £{balance}")
         print("Your in debt. You need to start saving!")
         time.sleep(1)
-        exit = input("Ready to go back?\n'Y' or 'n'\n")
+        exit = input("Ready to go back?\n'Y' or 'N'\n")
         if exit == "y".strip().lower():
             mainmenu()
         elif exit == "n".strip().lower():
@@ -105,9 +102,8 @@ def balance():
     
 
 def exit():
-    clearterminal()
     while True:
-    
+        clearterminal()
         exit = input("Are you sure you want to leave?\n 'Y' or 'N'\n")
         if exit == "y".strip().lower():
             break
@@ -119,7 +115,7 @@ def exit():
             clearterminal()
             print("INVALID Input")
             time.sleep(1)
-            clearterminal()
+            
 
     
 mainmenu()
