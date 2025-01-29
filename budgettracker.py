@@ -1,7 +1,10 @@
 import os
 import time 
+
+
 incomelist = []
 expenselist = []
+
 
 def clearterminal():
     if os.name == "nt":
@@ -47,9 +50,10 @@ def income():
             print("Please enter a numerical number")
             time.sleep(1)
             income()
-        category = input("What category would this be under?\n")
+        category = input("What category would this income be under?\n")
         incomelist.append({"Amount": amount,"Category": category})
         print(f"£{amount} has been saved under the category {category}")
+        time.sleep(2)
         mainmenu()
 
 def expense():
@@ -61,9 +65,10 @@ def expense():
             print("Please enter a numerical number")
             time.sleep(1)
             expense()
-        category = input("What category would this be under?\n")
+        category = input("What category would this expense be under?\n")
         expenselist.append({"Amount": amount,"Category": category})
         print(f"£{amount} has been saved under the category {category}")
+        time.sleep(2)
         mainmenu()
 
 def balance():
@@ -72,13 +77,13 @@ def balance():
     totalexpense = sum(item["Amount"] for item in expenselist)
     balance = totalincome - totalexpense
     print("-----Financial Summary------")
-    print(f"Total Income: £{totalincome:}")
+    print(f"Total Income: £{totalincome}")
     print(f"Total Expenses: £{totalexpense}")
     if balance >= 0:
         print(f"Overall Balance: £{balance}")
         print("Well done your saving money!")
         time.sleep(1)
-        exit = input("Ready to go back?\n'Y' or 'n'\n")
+        exit = input("Ready to go back?\n'Y' or 'N'\n")
         if exit == "y".strip().lower():
             mainmenu()
         elif exit == "n".strip().lower():
@@ -89,7 +94,7 @@ def balance():
         
     else:
         print(f"Overall Balance: £{balance}")
-        print("Your in debt. You need to start saving!")
+        print("Your in debt. You need to spend less?")
         time.sleep(1)
         exit = input("Ready to go back?\n'Y' or 'N'\n")
         if exit == "y".strip().lower():
@@ -98,6 +103,7 @@ def balance():
             balance()
         else:
             print("INVALID Input")
+            balance()
         
     
 
@@ -115,7 +121,7 @@ def exit():
             clearterminal()
             print("INVALID Input")
             time.sleep(1)
-            
+
 
     
 mainmenu()

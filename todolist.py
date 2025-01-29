@@ -9,7 +9,7 @@ def load_tasks():
     with open("tasks.txt", "r") as file:
         for line in file:
             tasks.append(line.strip())
-            return
+            
 
 def save_tasks():
     with open("tasks.txt", "w") as file:
