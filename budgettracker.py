@@ -1,6 +1,6 @@
 import os
 import time 
-
+import csv
 
 incomelist = []
 expenselist = []
@@ -122,6 +122,25 @@ def exit():
             print("INVALID Input")
             time.sleep(1)
 
+def savedata():
+    with open("income.csv", "w", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow(["Amount", "Category"])
+        for item in incomelist:
+            writer.writerow([item["Amount"],item["Category"]])
+    with open("expense.csv", "w", newline="") as big:
+        writer = csv.writer(file)
+        writer.writerow(["Amount", "Category"])
+        for item in incomelist:
+            writer.writerow([item["Amount"],item["Category"]])
 
+def loaddata():
+    global incomelist, expenselist
+    try:
+        with open("income.csv") as file:
+            reader = csv.reader(file)
+            next(reader)
+        incomelist = []
+        for row in reader:
     
 mainmenu()
