@@ -54,6 +54,7 @@ def income():
         incomelist.append({"Amount": amount,"Category": category})
         print(f"£{amount} has been saved under the category {category}")
         time.sleep(2)
+        savedata()
         mainmenu()
 
 def expense():
@@ -69,6 +70,7 @@ def expense():
         expenselist.append({"Amount": amount,"Category": category})
         print(f"£{amount} has been saved under the category {category}")
         time.sleep(2)
+        savedata()
         mainmenu()
 
 def balance():
@@ -135,12 +137,20 @@ def savedata():
             writer.writerow([item["Amount"],item["Category"]])
 
 def loaddata():
-    global incomelist, expenselist
-    try:
-        with open("income.csv") as file:
+    global expenselist, incomelist
+    if os.path.exists("income.csv"):
+        with open("income.csv", "r") as file:
             reader = csv.reader(file)
             next(reader)
-        incomelist = []
-        for row in reader:
-    
+            expenselist = []
+            for row in reader:
+                if len(row ) == 2:
+                    amount = float(row[0])
+                    category = (row[1])
+                    incomelist.append({"Amount": amount, "Category": category})
+    else:
+        savedata()
+        loaddata()
+
+loaddata()        
 mainmenu()
