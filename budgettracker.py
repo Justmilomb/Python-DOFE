@@ -22,7 +22,9 @@ def mainmenu():
     time.sleep(0.5)
     print("Choose 3 to view you're balance")
     time.sleep(0.5)
-    print("Choose 4 to exit the program")    
+    print("Choose 4 to clear all data")    
+    time.sleep(0.5)
+    print("Choose 5 to exit the program")
     time.sleep(0.5)
     chosen = input("What number do you choose?\n")
     if chosen == "1":
@@ -32,6 +34,8 @@ def mainmenu():
     elif chosen == "3":
         balance()
     elif chosen == "4":
+        cleardata()
+    elif chosen == "5":
         exit()
     else: 
         clearterminal()
@@ -54,7 +58,7 @@ def income():
         incomelist.append({"Amount": amount,"Category": category})
         print(f"£{amount} has been saved under the category {category}")
         time.sleep(2)
-        savedata()
+        saveincome()
         mainmenu()
 
 def expense():
@@ -70,7 +74,7 @@ def expense():
         expenselist.append({"Amount": amount,"Category": category})
         print(f"£{amount} has been saved under the category {category}")
         time.sleep(2)
-        savedata()
+        saveexpense()
         mainmenu()
 
 def balance():
@@ -114,7 +118,7 @@ def exit():
         clearterminal()
         exit = input("Are you sure you want to leave?\n 'Y' or 'N'\n")
         if exit == "y".strip().lower():
-            break
+            exit()
         elif exit == "n".strip().lower():
             print("Going back to menu...")
             time.sleep(1)
@@ -124,16 +128,18 @@ def exit():
             print("INVALID Input")
             time.sleep(1)
 
-def savedata():
+def saveincome():
     with open("income.csv", "w", newline="") as file:
         writer = csv.writer(file)
         writer.writerow(["Amount", "Category"])
         for item in incomelist:
             writer.writerow([item["Amount"],item["Category"]])
+
+def saveexpense():
     with open("expense.csv", "w", newline="") as big:
-        writer = csv.writer(file)
+        writer = csv.writer(big)
         writer.writerow(["Amount", "Category"])
-        for item in incomelist:
+        for item in expenselist:
             writer.writerow([item["Amount"],item["Category"]])
 
 def loaddata():
@@ -142,15 +148,42 @@ def loaddata():
         with open("income.csv", "r") as file:
             reader = csv.reader(file)
             next(reader)
-            expenselist = []
+            incomelist = []
             for row in reader:
-                if len(row ) == 2:
+                if len(row) == 2:
                     amount = float(row[0])
                     category = (row[1])
                     incomelist.append({"Amount": amount, "Category": category})
     else:
-        savedata()
-        loaddata()
+        saveincome()
+    if os.path.exists("expense.csv"):
+        with open("expense.csv", "r") as big:
+            reader = csv.reader(big)
+            next(reader)
+            expenselist = []
+            for row in reader:
+                if len(row) == 2:
+                    amount = float(row[0])
+                    category = (row[1])
+                    expenselist.append({"Amount": amount, "Category": category})
+    else:
+        saveexpense()
+
+def cleardata():
+    clearterminal()
+    global expenselist, incomelist
+    incomelist = []
+    expenselist = []
+    saveexpense()
+    saveincome()
+    loaddata()
+    print("Data has been wiped")
+    time.sleep(0.5)
+    print("Going back to menu now")
+    time.sleep(1)
+    mainmenu()
+
+
 
 loaddata()        
 mainmenu()
