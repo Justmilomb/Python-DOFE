@@ -4,6 +4,7 @@ import csv
 
 QuestionList = []
 AnswerList = []
+TitleList = []
 
 def ClearTerminal():
 	if os.name == "nt":
@@ -57,16 +58,19 @@ def ExitProgram():
 		ClearTerminal()
 		print("Incorrect input enter 'Y' or 'N'")
 		time.sleep(1.5)
+		ExitProgram()
 
 def NewFlashcard():
 	ClearTerminal()
-	while True:
-		NewQuestion()
-		NewAnswer()
-		szAnother = input("Would you like to add more flashcards?:  ").strip().lower()
-		if szAnother == "n":
-			break
-	
+	szTitle = ""
+	szTitle = input("What is the title/subject of the new set of flascards?:  ").strip()
+	if szTitle == "":
+		print("Title can not be empty. Try again:  ")
+		time.sleep(2)
+		NewFlashcard()
+	else:
+		print(f"The title has been saved as {szTitle}")
+		
 
 def NewQuestion():
 	ClearTerminal()
@@ -96,16 +100,16 @@ def NewAnswer():
 		print(f"{szAnswer} has been saved as a question")
 
 def SaveFlashcards():
-	global QuestionList, AnswerList
+	global QuestionList, AnswerList, TitleList
 	i = 0
 	with open("flashcards.csv", "w", newline = "") as file:
 		writer = csv.writer(file)
-		writer.writerow(["Question", "Answer"])
+		writer.writerow(["Title", "Question", "Answer"])
 		for i in range(len(QuestionList)):
 			writer.writerow([QuestionList[i], AnswerList[i]])
 
 def LoadFlashcards():
-	global QuestionsList, AnswerList
+	global QuestionList, AnswerList, TitleList
 	if os.path.exists("flashcards.csv"):
 		with open ("flashcards.csv", "r") as file:
 			reader = csv.reader(file)
@@ -116,6 +120,31 @@ def LoadFlashcards():
 	else:
 		SaveFlashcards()
 
+
+def ClearData():
+	ClearTerminal()
+	szAnswer = input("All data would be lost. Are you sure?: 'y' or 'n'").strip().lower()
+	if szAnswer == "y":
+		global QuestionList, AnswerList, TitleList
+		if os.path.exists("flashcards.csv"):
+			QuestionList = ""
+			AnswerList = ""
+			SaveFlashcards()
+			LoadFlashcards()
+			MainMenu()
+		else:
+			SaveFlashcards()
+			ClearData()
+	elif szAnswer == "n":
+		print("Going back to the main menu:  ")
+		time.sleep(2)
+		MainMenu()
+	else:
+		print("INVALID...")
+		time.sleep(0.5)
+		print("Please enter 'y' or 'n'")
+		ClearData()
+		
 
 LoadFlashcards()
 MainMenu()
