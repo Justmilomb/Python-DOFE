@@ -1,6 +1,5 @@
 import requests
-if __name__ == "__main__":
-    print("Hello, World!")
+
 
 API_KEY = "24d1be9d1577492c7b63ea4adfe65877" 
 BASE_URL = "http://api.openweathermap.org/data/2.5/weather"
