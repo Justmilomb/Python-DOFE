@@ -1,14 +1,12 @@
 # -*- coding: latin_1 -*-
 
 # python uibudgettracker.py
-
+Overall1 = ""
 import csv
 import os
 import ttkbootstrap as ttk
 import tkinter as tk
-# from tkinter import Button, ttk
 
-# Creates window
 def Expense():
     print(ExpenseEntryInt.get())
     ExpenseOutput.set(f"£{ExpenseEntryInt.get()} has been added as a expense")
@@ -26,48 +24,52 @@ def Income():
     SaveIncome()
 
 def SaveIncome():
+    FileExists = os.path.exists("income.csv")
     with open("income.csv", "w", newline="", encoding = "latin_1") as file:
         writer = csv.writer(file)
-        writer.writerow(["Amount"])
+        if not FileExists:
+            writer.writerow(["Amount"])
         for item in incomelist:
-            print(item)
             writer.writerow([item["Amount"]])
 
 def SaveExpenses():
-    with open("expense.csv", "w", newline="", encoding = "latin_1") as big:
-        writer = csv.writer(big)
-        writer.writerow(["Amount"])
+    FileExists = os.path.exists("expense.csv")
+    with open("expense.csv", "w", newline="", encoding = "latin_1") as file:
+        writer = csv.writer(file)
+        if not FileExists:
+            writer.writerow(["Amount"])
         for item in expenselist:
             writer.writerow([item["Amount"]])
 
 def LoadData():
     global expenselist, incomelist
+    incomelist.clear()
+    expenselist.clear()
     if os.path.exists("income.csv"):
-        with open("income.csv", "r") as file:
+        with open("income.csv", "r", encoding = "latin_1") as file:
             reader = csv.reader(file)
-            next(reader)
-            incomelist = []
+            next(reader, None)
             for row in reader:
-                if len(row) == 2:
-                    amount = float(row[0])
-                    category = (row[1])
-                    incomelist.append({"Amount": amount})
-    else:
-        SaveIncome()
-    if os.path.exists("expense.csv"):
-        with open("expense.csv", "r") as big:
-            reader = csv.reader(big)
-            next(reader)
-            expenselist = []
-            for row in reader:
-                if len(row) == 2:
-                    amount = float(row[0])
-                    category = (row[1])
-                    expenselist.append({"Amount": amount})
-    else:
-        SaveExpenses()
+                amount = float(row[0])
+                incomelist.append({"Amount": amount})
 
-Window = tk.Tk()
+    if os.path.exists("expense.csv"):
+        with open("expense.csv", "r", encoding = "latin_1") as big:
+            reader = csv.reader(big)
+            next(reader, None)
+            for row in reader:
+                amount = float(row[0])
+                expenselist.append({"Amount": amount})
+
+
+def total():
+    global Overall1
+    LoadData()
+    totalincome = sum(item["Amount"] for item in incomelist)
+    totalexpense = sum(item["Amount"] for item in expenselist)
+    Overall1.set(f"Total Income: £{totalincome} : Total Expenses: £{totalexpense}")
+
+Window = ttk.Window(themename = "darkly")
 Window.title("Productivity")
 Window.geometry("1920x1080")
 incomelist = []
@@ -88,6 +90,7 @@ IncomeButton.pack(side = "left", padx = 10)
 InputFrameIncome.pack(pady = 20)
 
 # Output income
+IncomeOutput = tk.StringVar()
 OutputFrameIncome = ttk.Frame(master = Window)
 OutputIncomeText = ttk.Label(master = OutputFrameIncome, textvariable = IncomeOutput)
 OutputIncomeText.pack()
@@ -109,7 +112,14 @@ OutputExpenseText = ttk.Label(master = OutputFrameExpense, textvariable = Expens
 OutputExpenseText.pack()
 OutputFrameExpense.pack(pady = 12.5)
 
-# Output 
+# Output info
+Overall1 = tk.StringVar()
+OutputFrameConclusion = ttk.Frame(master = Window)
+OutputFrameText = ttk.Label(master = OutputFrameConclusion, textvariable = Overall1)
+InfoButton = ttk.Button(master = OutputFrameConclusion, text = "All info", command = total)
+OutputFrameText.pack()
+InfoButton.pack()
+OutputFrameConclusion.pack(pady = 12.5)
 
 
 

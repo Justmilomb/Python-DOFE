@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\App"
+    "\\App",
+    "\\BudgetTracker"
   ],
-  "SelectedNode": "\\README.md",
+  "SelectedNode": "\\App\\UIBudgetTracker.py",
   "PreviewInSolutionExplorer": false
 }
