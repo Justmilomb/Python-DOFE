@@ -27,8 +27,7 @@ def SaveIncome():
     FileExists = os.path.exists("income.csv")
     with open("income.csv", "w", newline="", encoding = "latin_1") as file:
         writer = csv.writer(file)
-        if not FileExists:
-            writer.writerow(["Amount"])
+        writer.writerow(["Amount"])
         for item in incomelist:
             writer.writerow([item["Amount"]])
 
@@ -36,8 +35,7 @@ def SaveExpenses():
     FileExists = os.path.exists("expense.csv")
     with open("expense.csv", "w", newline="", encoding = "latin_1") as file:
         writer = csv.writer(file)
-        if not FileExists:
-            writer.writerow(["Amount"])
+        writer.writerow(["Amount"])
         for item in expenselist:
             writer.writerow([item["Amount"]])
 
@@ -68,6 +66,14 @@ def total():
     totalincome = sum(item["Amount"] for item in incomelist)
     totalexpense = sum(item["Amount"] for item in expenselist)
     Overall1.set(f"Total Income: £{totalincome} : Total Expenses: £{totalexpense}")
+
+
+def ClearData():
+    incomelist.clear()
+    expenselist.clear()
+    SaveExpenses()
+    SaveIncome()
+
 
 Window = ttk.Window(themename = "darkly")
 Window.title("Productivity")
@@ -120,6 +126,12 @@ InfoButton = ttk.Button(master = OutputFrameConclusion, text = "All info", comma
 OutputFrameText.pack()
 InfoButton.pack()
 OutputFrameConclusion.pack(pady = 12.5)
+
+# Input clear data
+ClearDataFrame = ttk.Frame(master = Window)
+ClearDataButton = ttk.Button(master = ClearDataFrame, text = "Clear Data", command = ClearData)
+ClearDataButton.pack()
+ClearDataFrame.pack(pady = 12.5)
 
 
 
