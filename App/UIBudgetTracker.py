@@ -8,20 +8,23 @@ import ttkbootstrap as ttk
 import tkinter as tk
 
 def Expense():
-    print(ExpenseEntryInt.get())
-    ExpenseOutput.set(f"£{ExpenseEntryInt.get()} has been added as a expense")
-    Amount = ExpenseEntryInt.get()
-    expenselist.append({"Amount": Amount})
-    print(expenselist)
-    SaveExpenses()
+    try:
+        Amount = ExpenseEntryflt.get()
+        IncomeOutput.set(f"£{ExpenseEntrylt.get()} has been added as a income")
+        incomelist.append({"Amount": Amount})
+        SaveIncome()
+    except tk.TclError:
+        IncomeOutput.set("Invalid input... Enter a number")
+
 
 def Income():
-    print(IncomeEntryInt.get())
-    IncomeOutput.set(f"£{IncomeEntryInt.get()} has been added as a income")
-    Amount = IncomeEntryInt.get()
-    incomelist.append({"Amount": Amount})
-    print(incomelist)
-    SaveIncome()
+    try:
+        Amount = IncomeEntryflt.get()
+        IncomeOutput.set(f"£{IncomeEntryflt.get()} has been added as a income")
+        incomelist.append({"Amount": Amount})
+        SaveIncome()
+    except tk.TclError:
+        IncomeOutput.set("Invalid input... Enter a number")
 
 def SaveIncome():
     FileExists = os.path.exists("income.csv")
@@ -73,6 +76,9 @@ def ClearData():
     expenselist.clear()
     SaveExpenses()
     SaveIncome()
+    total()
+    ExpenseOutput.set("Data Cleared")
+    IncomeOutput.set("Data Cleared")
 
 
 Window = ttk.Window(themename = "darkly")
@@ -88,8 +94,8 @@ TitleLable.pack()
 # Input income
 InputFrameIncome = ttk.Frame(master = Window)
 IncomeOutput = tk.StringVar()
-IncomeEntryInt = tk.IntVar()
-IncomeEntry = ttk.Entry(master = InputFrameIncome, textvariable = IncomeEntryInt)
+IncomeEntryflt = tk.DoubleVar()
+IncomeEntry = ttk.Entry(master = InputFrameIncome, textvariable = IncomeEntryflt)
 IncomeButton = ttk.Button(master = InputFrameIncome, text = "Add Income", command = Income)
 IncomeEntry.pack(side = "left", padx = 10)
 IncomeButton.pack(side = "left", padx = 10)
@@ -105,8 +111,8 @@ OutputFrameIncome.pack(pady = 12.5)
 # Input expense
 InputFrameExpense = ttk.Frame(master = Window)
 ExpenseOutput = tk.StringVar()
-ExpenseEntryInt = tk.IntVar()
-ExpenseEntry = ttk.Entry(master = InputFrameExpense, textvariable = ExpenseEntryInt)
+ExpenseEntryflt = tk.DoubleVar()
+ExpenseEntry = ttk.Entry(master = InputFrameExpense, textvariable = ExpenseEntryflt)
 ExpenseButton = ttk.Button(master = InputFrameExpense, text = "Add Expense", command = Expense)
 ExpenseEntry.pack(side = "left", padx = 10)
 ExpenseButton.pack(side = "left", padx = 10)
