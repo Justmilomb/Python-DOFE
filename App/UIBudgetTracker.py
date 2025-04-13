@@ -1,20 +1,34 @@
 # -*- coding: latin_1 -*-
 
-# python uibudgettracker.py
-Overall1 = ""
 import csv
 import os
 import ttkbootstrap as ttk
 import tkinter as tk
 
+OverallList = ""
+ExpenseList = ""
+IncomeList = ""
+
+
 def Expense():
-    try:
-        Amount = ExpenseEntryflt.get()
-        IncomeOutput.set(f"£{ExpenseEntrylt.get()} has been added as a income")
-        incomelist.append({"Amount": Amount})
-        SaveIncome()
-    except tk.TclError:
-        IncomeOutput.set("Invalid input... Enter a number")
+    expensestage = True
+    while expensestage == True:
+        try:
+            Amount = ExpenseEntryflt.get()
+            IncomeOutput.set(f"£{ExpenseEntryflt.get()} has been added as a income")
+            incomelist.append({"Amount": Amount})
+            ExpenseEntryflt.set(0)
+            expensestage = False
+        except tk.TclError:
+            IncomeOutput.set("Invalid input... Enter a number")
+    while expensestage == False:
+        ExpenseEntry.config(textvariable = ExpenseCategory )
+        ExpenseOutput.set("Now enter a category")
+        ExpenseButton.config(text = "Add Category")
+        Category = ExpenseEntry.get()
+        incomelist.append({"Category": Category})
+        expensestage = True
+    SaveExpenses()
 
 
 def Income():
@@ -112,6 +126,7 @@ OutputFrameIncome.pack(pady = 12.5)
 InputFrameExpense = ttk.Frame(master = Window)
 ExpenseOutput = tk.StringVar()
 ExpenseEntryflt = tk.DoubleVar()
+ExpenseCategory = tk.StringVar()
 ExpenseEntry = ttk.Entry(master = InputFrameExpense, textvariable = ExpenseEntryflt)
 ExpenseButton = ttk.Button(master = InputFrameExpense, text = "Add Expense", command = Expense)
 ExpenseEntry.pack(side = "left", padx = 10)
