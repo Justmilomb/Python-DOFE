@@ -5,29 +5,30 @@ import os
 import ttkbootstrap as ttk
 import tkinter as tk
 
-OverallList = ""
-ExpenseList = ""
-IncomeList = ""
-
+OverallList = []
+ExpenseList = []
+IncomeList = []
+fltAmount = ""
+blExpenseStage = False
 
 def Expense():
-    expensestage = True
-    while expensestage == True:
+    blExpenseStage = True
+    while blExpenseStage == True:
         try:
-            Amount = ExpenseEntryflt.get()
-            IncomeOutput.set(f"£{ExpenseEntryflt.get()} has been added as a income")
-            incomelist.append({"Amount": Amount})
-            ExpenseEntryflt.set(0)
-            expensestage = False
+            fltAmount = fltExpenseAmount.get()
+            IncomeOutput.set(f"£{fltAmount} has been added as a income")
+            IncomeList.append({"Amount": fltAmount})
+            fltExpenseAmount.set(0.0)
+            blExpenseStage = False
         except tk.TclError:
             IncomeOutput.set("Invalid input... Enter a number")
-    while expensestage == False:
-        ExpenseEntry.config(textvariable = ExpenseCategory )
+    while blExpenseStage == False:
+        ExpenseEntry.config(textvariable = szExpenseCategory)
         ExpenseOutput.set("Now enter a category")
         ExpenseButton.config(text = "Add Category")
-        Category = ExpenseEntry.get()
-        incomelist.append({"Category": Category})
-        expensestage = True
+        szCategory = ExpenseEntry.get()
+        IncomeList.append({"Category": szCategory})
+        blExpenseStage = True
     SaveExpenses()
 
 
@@ -101,15 +102,16 @@ Window.geometry("1920x1080")
 incomelist = []
 expenselist = []
 LoadData()
+
 # Title
 TitleLable = ttk.Label(master = Window, text = "Budget Tracker", font = "calibri 24 bold")
 TitleLable.pack() 
 
 # Input income
 InputFrameIncome = ttk.Frame(master = Window)
-IncomeOutput = tk.StringVar()
-IncomeEntryflt = tk.DoubleVar()
-IncomeEntry = ttk.Entry(master = InputFrameIncome, textvariable = IncomeEntryflt)
+fltIncomeAmount = tk.DoubleVar()
+szIncomeCategory = tk.StringVar()
+IncomeEntry = ttk.Entry(master = InputFrameIncome, textvariable = fltIncomeAmount)
 IncomeButton = ttk.Button(master = InputFrameIncome, text = "Add Income", command = Income)
 IncomeEntry.pack(side = "left", padx = 10)
 IncomeButton.pack(side = "left", padx = 10)
@@ -125,9 +127,9 @@ OutputFrameIncome.pack(pady = 12.5)
 # Input expense
 InputFrameExpense = ttk.Frame(master = Window)
 ExpenseOutput = tk.StringVar()
-ExpenseEntryflt = tk.DoubleVar()
-ExpenseCategory = tk.StringVar()
-ExpenseEntry = ttk.Entry(master = InputFrameExpense, textvariable = ExpenseEntryflt)
+fltExpenseAmount = tk.DoubleVar()
+szExpenseCategory = tk.StringVar()
+ExpenseEntry = ttk.Entry(master = InputFrameExpense, textvariable = fltExpenseAmount)
 ExpenseButton = ttk.Button(master = InputFrameExpense, text = "Add Expense", command = Expense)
 ExpenseEntry.pack(side = "left", padx = 10)
 ExpenseButton.pack(side = "left", padx = 10)
