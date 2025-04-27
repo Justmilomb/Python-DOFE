@@ -7,49 +7,70 @@
 
 # Imports
 import tkinter as tk
+from tkinter import ttk
 import pandas as pd
+from ttkbootstrap import Style
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
 
 
 # Setting up window
 Main = tk.Tk()
 Main.geometry("1920x1080")
 Main.title("Budget Tracker")
-Frame = tk.Frame(Main, width = 100, height = 200)
+Frame = ttk.Frame(Main, width = 100, height = 200)
 
 
 # Dataframes
 dfIncome = pd.DataFrame(columns = ["Amount", "Category"])
 dfExpense = pd.DataFrame(columns = ["Amount", "Category"])
 
+# Save data
+def SaveData():
+    dfExpense.to_csv("expense.csv", index = False)
+    dfIncome.to_csv("income.csv", index = False)
+
+# Load files
+try: 
+    dfIncome = pd.read_csv("income.csv")
+except FileNotFoundError:
+    SaveData()
+    
+try:
+    dfExpense = pd.read_csv("expense.csv")
+except FileNotFoundError:
+    SaveData()
+
+  
 
 # Variables
-fltIncomeAmount = tk.DoubleVar()
-fltExpenseAmount = tk.DoubleVar()
+fIncomeAmount = tk.DoubleVar()
+fExpenseAmount = tk.DoubleVar()
 szIncomeCategory = tk.StringVar()
 szExpenseCategory = tk.StringVar()
 szInfomation = tk.StringVar()
 
 
 # Label
-MainLabel = tk.Label(master = Frame, text = "Budget Tracker", font=("Arial", 25))
+MainLabel = ttk.Label(master = Frame, text = "Budget Tracker")
 MainLabel.pack(pady = 10)
-
 
 # Income Functionality
 def AddIncomeInfo():
-    fltAmount = 0.0
+    fAmount = 0.0
     szCategory = ""
     dfIncome["Category"] = dfIncome["Category"].astype("string")
 
     
-    fltAmount = fltIncomeAmount.get()
+    fAmount = fIncomeAmount.get()
 
     # Income Entry
     IncomeEntry.config(text = "Enter Category", textvariable = szIncomeCategory)
     IncomeEntry.pack(pady = 20)
 
     # Income Button
-    IncomeButton.config(text = "Add Category", font = ("Arial", 12))
+    IncomeButton.config(text = "Add Category")
     IncomeButton.pack(pady = 0, padx = 10)
 
     szCategory = szIncomeCategory.get()
@@ -57,46 +78,47 @@ def AddIncomeInfo():
     
     if len(szCategory) != 0:
         # Saves to dataframe
-        dfIncome.loc[len(dfIncome)] = [fltAmount, szCategory.lower()]
-        
+        dfIncome.loc[len(dfIncome)] = [fAmount, szCategory.lower()]
+        SaveData()
+
         # Resetting GUI
         ResetIncomeUI()
         print(dfIncome)
 def ResetIncomeUI():
     # Income Entry
-    IncomeEntry.config(text = "Enter Income", textvariable = fltIncomeAmount)
+    IncomeEntry.config(text = "Enter Income", textvariable = fIncomeAmount)
     IncomeEntry.pack(pady = 20)
 
     # Income Button
-    IncomeButton.config(text = "Add Income", font = ("Arial", 12), command = AddIncomeInfo)
+    IncomeButton.config(text = "Add Income", command = AddIncomeInfo)
     IncomeButton.pack(pady = 0, padx = 10)
-    fltIncomeAmount.set("")
+    fIncomeAmount.set("")
     szIncomeCategory.set("")
 
 # IncomeEntry
-IncomeEntry = tk.Entry(master = Frame, text = "Enter Income", textvariable = fltIncomeAmount)
+IncomeEntry = ttk.Entry(master = Frame, text = "Enter Income", textvariable = fIncomeAmount)
 IncomeEntry.pack(pady = 20)
 
 # IncomeButton
-IncomeButton = tk.Button(master = Frame, text = "Add Income", font = ("Arial", 12), command = AddIncomeInfo)
+IncomeButton = ttk.Button(master = Frame, text = "Add Income", command = AddIncomeInfo)
 IncomeButton.pack(pady = 0, padx = 10)
 
 
 # Expense Functionality
 def AddExpenseInfo():
-    fltAmount = 0.0
+    fAmount = 0.0
     szCategory = ""
     dfExpense["Category"] = dfExpense["Category"].astype("string")
 
     
-    fltAmount = fltExpenseAmount.get()
+    fAmount = fExpenseAmount.get()
 
     # Expense Entry
     ExpenseEntry.config(text = "Enter Category", textvariable = szExpenseCategory)
     ExpenseEntry.pack(pady = 20)
 
     # Expense Button
-    ExpenseButton.config(text = "Add Category", font = ("Arial", 12))
+    ExpenseButton.config(text = "Add Category",)
     ExpenseButton.pack(padx = 10)
 
     szCategory = szExpenseCategory.get()
@@ -104,28 +126,30 @@ def AddExpenseInfo():
     
     if len(szCategory) != 0:
         # Saves to dataframe
-        dfExpense.loc[len(dfExpense)] = [fltAmount, szCategory.lower()]
+        dfExpense.loc[len(dfExpense)] = [fAmount, szCategory.lower()]
+        SaveData()
+        
         # Resetting GUI
         ResetExpenseUI()
         print(dfExpense)
 def ResetExpenseUI():
     # ExpenseEntry
-    ExpenseEntry.config(text = "Enter Expense", textvariable = fltExpenseAmount)
+    ExpenseEntry.config(text = "Enter Expense", textvariable = fExpenseAmount)
     ExpenseEntry.pack(pady = 20)
 
     # ExpenseButton
-    ExpenseButton.config(text = "Add Expense", font = ("Arial", 12), command = AddExpenseInfo)
+    ExpenseButton.config(text = "Add Expense", command = AddExpenseInfo)
     ExpenseButton.pack(pady = 0, padx = 10)
 
-    fltExpenseAmount.set("")
+    fExpenseAmount.set("")
     szExpenseCategory.set("")
 
 # Expense Entry
-ExpenseEntry = tk.Entry(master = Frame, text = "Enter Expense", textvariable = fltExpenseAmount)
+ExpenseEntry = ttk.Entry(master = Frame, text = "Enter Expense", textvariable = fExpenseAmount)
 ExpenseEntry.pack(pady = 20)
 
 # Expense Button
-ExpenseButton = tk.Button(master = Frame, text = "Add Expense", font = ("Arial", 12), command = AddExpenseInfo)
+ExpenseButton = ttk.Button(master = Frame, text = "Add Expense", command = AddExpenseInfo)
 ExpenseButton.pack(pady = 0, padx = 10)
 
 
@@ -134,32 +158,37 @@ def ClearData():
     global dfExpense, dfIncome
     dfExpense = pd.DataFrame(columns = ["Amount", "Category"])
     dfIncome = pd.DataFrame(columns = ["Amount", "Category"])
+    SaveData()
+    AllInfo()
 
 # Clear Data Button
-ClearDataButton = tk.Button(master = Frame, text = "Clear Data", command = ClearData)
+ClearDataButton = ttk.Button(master = Frame, text = "Clear Data", command = ClearData)
 ClearDataButton.pack(pady = 10)
 
 
 # Infomation Functionality
 def AllInfo():
-    fltTotalIncome = dfIncome["Amount"].sum()
-    fltTotalExpense = dfExpense["Amount"].sum()
-    fltBalance = fltTotalIncome - fltTotalExpense
-    szInfomation.set(f"Total Income: ${fltTotalIncome:.2f} | Total Expenses: {fltTotalExpense:.2f} | Balance: {fltBalance:.2f}")
+    fTotalIncome = dfIncome["Amount"].sum()
+    fTotalExpense = dfExpense["Amount"].sum()
+    fBalance = fTotalIncome - fTotalExpense
+    szInfomation.set(f"Total Income: {fTotalIncome:.2f} | Total Expenses: {fTotalExpense:.2f} | Balance: {fBalance:.2f}")
 
 # Infomation Button
-InfomationButton = tk.Button(master = Frame, text = "All info", command = AllInfo)
+InfomationButton = ttk.Button(master = Frame, text = "All info", command = AllInfo)
 InfomationButton.pack(pady = 10)
 
 # Infomation Output
-InfomationOutput = tk.Label(master = Frame, textvariable = szInfomation, font = ("Arial", 25))
+InfomationOutput = ttk.Label(master = Frame, textvariable = szInfomation)
 InfomationOutput.pack(pady = 50)
 
 
-# Pie Chart Functionality
-def PieChart():
-    Canvas = tk.Canvas(master = Frame, width = 400, height = 400, bg="white")
-    Canvas.pack(pady= 20)
+
+
+
+
+
+
+
 
 
 
