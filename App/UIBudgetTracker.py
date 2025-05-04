@@ -25,6 +25,7 @@ Frame = ttk.Frame(Main, width = 100, height = 200)
 # Dataframes
 dfIncome = pd.DataFrame(columns = ["Amount", "Category"])
 dfExpense = pd.DataFrame(columns = ["Amount", "Category"])
+dfIncomeGrouped = pd.DataFrame(columns = [])
 
 # Save data
 def SaveData():
@@ -171,6 +172,7 @@ ClearDataButton.pack(pady = 10)
 
 # Infomation Functionality
 def AllInfo():
+    global dfIncomeGrouped
     fTotalIncome = dfIncome["Amount"].sum()
     fTotalExpense = dfExpense["Amount"].sum()
     fBalance = fTotalIncome - fTotalExpense
@@ -178,8 +180,14 @@ def AllInfo():
     if dfIncome.empty:
         szCategory.set("")
     else:
-        dfIncomeGrouped = dfIncome.groupby("Category", as_index=False)["Amount"].sum()
+        dfIncomeGrouped = dfIncome.groupby("Category", as_index= False)["Amount"].sum().sort_values(by = "Amount", ascending = False)
         szCategory.set(dfIncomeGrouped)
+        for index, row in dfIncomeGrouped.iterrows():
+            Category = row["Category"]
+            szAmount = row["Amount"]
+            Text = f"Category: {Category} | Amount: {szAmount}\n"
+            szCategory.set(Text)
+        
 
 # Infomation Button
 InfomationButton = ttk.Button(master = Frame, text = "All info", command = AllInfo)
@@ -188,8 +196,8 @@ InfomationButton.pack(pady = 10)
 # Infomation Output
 InfomationOutput = ttk.Label(master = Frame, textvariable = szInfomation)
 InfomationOutput.pack(pady = 50)
-CategoryOutput = ttk.Label(master = Frame, textvariable = szCategory)
-CategoryOutput.pack(pady = 50)
+for index, row in dfIncomeGrouped.iterrows():
+    szCategory
 
 
 
