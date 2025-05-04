@@ -50,6 +50,7 @@ fExpenseAmount = tk.DoubleVar()
 szIncomeCategory = tk.StringVar()
 szExpenseCategory = tk.StringVar()
 szInfomation = tk.StringVar()
+szCategory = tk.StringVar()
 
 
 # Label
@@ -84,6 +85,7 @@ def AddIncomeInfo():
         # Resetting GUI
         ResetIncomeUI()
         print(dfIncome)
+        AllInfo()
 def ResetIncomeUI():
     # Income Entry
     IncomeEntry.config(text = "Enter Income", textvariable = fIncomeAmount)
@@ -132,6 +134,7 @@ def AddExpenseInfo():
         # Resetting GUI
         ResetExpenseUI()
         print(dfExpense)
+    AllInfo()
 def ResetExpenseUI():
     # ExpenseEntry
     ExpenseEntry.config(text = "Enter Expense", textvariable = fExpenseAmount)
@@ -172,6 +175,11 @@ def AllInfo():
     fTotalExpense = dfExpense["Amount"].sum()
     fBalance = fTotalIncome - fTotalExpense
     szInfomation.set(f"Total Income: {fTotalIncome:.2f} | Total Expenses: {fTotalExpense:.2f} | Balance: {fBalance:.2f}")
+    if dfIncome.empty:
+        szCategory.set("")
+    else:
+        dfIncomeGrouped = dfIncome.groupby("Category", as_index=False)["Amount"].sum()
+        szCategory.set(dfIncomeGrouped)
 
 # Infomation Button
 InfomationButton = ttk.Button(master = Frame, text = "All info", command = AllInfo)
@@ -180,6 +188,8 @@ InfomationButton.pack(pady = 10)
 # Infomation Output
 InfomationOutput = ttk.Label(master = Frame, textvariable = szInfomation)
 InfomationOutput.pack(pady = 50)
+CategoryOutput = ttk.Label(master = Frame, textvariable = szCategory)
+CategoryOutput.pack(pady = 50)
 
 
 
