@@ -10,8 +10,7 @@ import tkinter as tk
 from tkinter import ttk
 import pandas as pd
 from ttkbootstrap import Style
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
 
 
 
@@ -48,10 +47,11 @@ except FileNotFoundError:
 # Variables
 fIncomeAmount = tk.DoubleVar()
 fExpenseAmount = tk.DoubleVar()
-szIncomeCategory = tk.StringVar()
-szExpenseCategory = tk.StringVar()
+szIncomeCategoryInput = tk.StringVar()
+szExpenseCategoryInput = tk.StringVar()
+szIncomeCategoryOutput = tk.StringVar()
+szExpenseCategoryOutput = tk.StringVar()
 szInfomation = tk.StringVar()
-szCategory = tk.StringVar()
 
 
 # Label
@@ -68,16 +68,16 @@ def AddIncomeInfo():
     fAmount = fIncomeAmount.get()
 
     # Income Entry
-    IncomeEntry.config(text = "Enter Category", textvariable = szIncomeCategory)
+    IncomeEntry.config(text = "Enter Category", textvariable = szIncomeCategoryInput)
     IncomeEntry.pack(pady = 20)
 
     # Income Button
     IncomeButton.config(text = "Add Category")
     IncomeButton.pack(pady = 0, padx = 10)
 
-    szCategory = szIncomeCategory.get()
+    szCategory = szIncomeCategoryInput.get()
     
-    
+    szIncomeCategoryInput.set("")
     if len(szCategory) != 0:
         # Saves to dataframe
         dfIncome.loc[len(dfIncome)] = [fAmount, szCategory.lower()]
@@ -96,7 +96,7 @@ def ResetIncomeUI():
     IncomeButton.config(text = "Add Income", command = AddIncomeInfo)
     IncomeButton.pack(pady = 0, padx = 10)
     fIncomeAmount.set("")
-    szIncomeCategory.set("")
+    szIncomeCategoryInput.set("")
 
 # IncomeEntry
 IncomeEntry = ttk.Entry(master = Frame, text = "Enter Income", textvariable = fIncomeAmount)
@@ -117,14 +117,14 @@ def AddExpenseInfo():
     fAmount = fExpenseAmount.get()
 
     # Expense Entry
-    ExpenseEntry.config(text = "Enter Category", textvariable = szExpenseCategory)
+    ExpenseEntry.config(text = "Enter Category", textvariable = szExpenseCategoryInput)
     ExpenseEntry.pack(pady = 20)
 
     # Expense Button
-    ExpenseButton.config(text = "Add Category",)
+    ExpenseButton.config(text = "Add Category", command = AddExpenseInfo)
     ExpenseButton.pack(padx = 10)
 
-    szCategory = szExpenseCategory.get()
+    szCategory = szExpenseCategoryInput.get()
     
     
     if len(szCategory) != 0:
@@ -146,7 +146,7 @@ def ResetExpenseUI():
     ExpenseButton.pack(pady = 0, padx = 10)
 
     fExpenseAmount.set("")
-    szExpenseCategory.set("")
+    szExpenseCategoryInput.set("")
 
 # Expense Entry
 ExpenseEntry = ttk.Entry(master = Frame, text = "Enter Expense", textvariable = fExpenseAmount)
@@ -167,26 +167,38 @@ def ClearData():
 
 # Clear Data Button
 ClearDataButton = ttk.Button(master = Frame, text = "Clear Data", command = ClearData)
-ClearDataButton.pack(pady = 10)
+ClearDataButton.pack(pady = 50)
 
 
 # Infomation Functionality
 def AllInfo():
-    global dfIncomeGrouped
+    global dfIncomeGrouped, dfExpenseGrouped
     fTotalIncome = dfIncome["Amount"].sum()
     fTotalExpense = dfExpense["Amount"].sum()
     fBalance = fTotalIncome - fTotalExpense
     szInfomation.set(f"Total Income: {fTotalIncome:.2f} | Total Expenses: {fTotalExpense:.2f} | Balance: {fBalance:.2f}")
     if dfIncome.empty:
-        szCategory.set("")
+        szIncomeCategoryOutput.set("")
     else:
-        dfIncomeGrouped = dfIncome.groupby("Category", as_index= False)["Amount"].sum().sort_values(by = "Amount", ascending = False)
-        szCategory.set(dfIncomeGrouped)
+        dfIncomeGrouped = dfIncome.groupby("Category", as_index = False)["Amount"].sum().sort_values(by = "Amount", ascending = False)
+        szIncomeCategoryOutput.set(dfIncomeGrouped)
+        IncomeOverall = ["------------Income------------"]
         for index, row in dfIncomeGrouped.iterrows():
-            Category = row["Category"]
+            szCategory = row["Category"]
             szAmount = row["Amount"]
-            Text = f"Category: {Category} | Amount: {szAmount}\n"
-            szCategory.set(Text)
+            IncomeOverall.append(f"Amount: {szAmount} || Category: {szCategory}")
+            szIncomeCategoryOutput.set("\n".join(IncomeOverall))
+    if dfExpense.empty:
+        szExpenseCategoryOutput.set("")
+    else:
+        dfExpenseGrouped = dfExpense.groupby("Category", as_index = False)["Amount"].sum().sort_values(by = "Amount", ascending = False)
+        szExpenseCategoryOutput.set(dfExpenseGrouped)
+        ExpenseOverall = ["------------Expense------------"]
+        for index, row in dfExpenseGrouped.iterrows():
+            szCategory = row["Category"]
+            szAmount = row["Amount"]
+            ExpenseOverall.append(f"Amount: {szAmount} || Category: {szCategory}")
+            szExpenseCategoryOutput.set("\n".join(ExpenseOverall))
         
 
 # Infomation Button
@@ -195,9 +207,11 @@ InfomationButton.pack(pady = 10)
 
 # Infomation Output
 InfomationOutput = ttk.Label(master = Frame, textvariable = szInfomation)
-InfomationOutput.pack(pady = 50)
-for index, row in dfIncomeGrouped.iterrows():
-    szCategory
+InfomationOutput.pack(pady = 25)
+CategoryOutputIncome = ttk.Label(master = Frame, textvariable = szIncomeCategoryOutput)
+CategoryOutputIncome.pack(pady = 10)
+CategoryOutputExpense = ttk.Label(master = Frame, textvariable = szExpenseCategoryOutput)
+CategoryOutputExpense.pack(pady = 10)
 
 
 
